@@ -4,17 +4,17 @@ from abc import ABC
 
 class ScrapperInterface(ABC):  
 
-    def _getBaseUrlFromWebsite(self, website: str) -> str:
+    def _get_base_url_from_website(self, website: str) -> str:
         return {
             SourceWebSite.FBREF: 'https://fbref.com/fr/matchs/',
 
         }[website]
 
     def __init__(self, website: str, ) -> None:
-        self.baseUrl: str = self._getBaseUrlFromWebsite(website)
+        self.baseUrl: str = self._get_base_url_from_website(website)
         
     def scrap(self):
         pass
 
-    def getLink(self, link: str) -> None:
+    def get_link(self, link: str) -> None:
         pass
