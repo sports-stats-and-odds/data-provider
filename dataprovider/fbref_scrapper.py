@@ -30,7 +30,7 @@ class FbrefScrapper(ScrapperInterface):
                 time = row.find('span', {"class": 'venuetime'}).text
                 homeTeam = row.find('td', {"data-stat": 'home_team'}).find('a').text
                 awayTeam = row.find('td', {"data-stat": 'away_team'}).find('a').text
-                splittedScore = row.find('td', {"data-stat": 'score'}).find('a').text.split("–") #this is noty a basic dash : the charatcter is "–" whereas a basic dash is "-"
+                splittedScore = row.find('td', {"data-stat": 'score'}).find('a').text.split("–") #this is noty a basic dash : the charatcter is U+2013 "–" whereas a basic dash is "-"
                 homeTeamScore = splittedScore[0]
                 awayTeamScore = splittedScore[1]
                 attendance = row.find('td', {"data-stat": 'attendance'}).text
