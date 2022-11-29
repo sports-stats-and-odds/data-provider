@@ -1,0 +1,3 @@
+Aggrégation : la destruction du parent ne détruit pas les enfants
+Composition : la destruction du parent détruit les parents
+Extension : le comportement de A peut être complété par le comportement de B
