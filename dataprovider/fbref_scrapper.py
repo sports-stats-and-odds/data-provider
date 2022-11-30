@@ -3,6 +3,7 @@ from source_web_site_enum import SourceWebSite
 from bs4 import BeautifulSoup
 import requests
 from datetime import datetime, timedelta, date
+from time import sleep
 
 class FbrefScrapper(ScrapperInterface):
     def __init__(self) -> None:
@@ -15,14 +16,16 @@ class FbrefScrapper(ScrapperInterface):
             date = date + timedelta(days=1)
             return date.strftime("%Y-%m-%d")
     
-        currentDateStr: str = "2022-11-25"
+        currentDateStr: str = "2022-01-01" #1888-01-01
 
-        # while datetime.strptime(currentDateStr, "%Y-%m-%d") < datetime.today() and False: #while currentDate < todayDate
+        # while datetime.strptime(currentDateStr, "%Y-%m-%d") < datetime.today(): #while currentDate < todayDate
         print(f'currentDateStr : {currentDateStr}')
         self.baseUrl += currentDateStr
         req = requests.get(self.baseUrl)
         soup = BeautifulSoup(req.content, 'html.parser')
         tables = soup.find_all('div', {"class": "table_wrapper tabbed"})
+        if len(tables) <= 0:
+            sleep(0.5)
         for table in tables:
             rows = table.find_all('tr')
             rows.pop(0) #remove first row because it is the table header
@@ -35,16 +38,15 @@ class FbrefScrapper(ScrapperInterface):
                 awayTeamScore = splittedScore[1]
                 attendance = row.find('td', {"data-stat": 'attendance'}).text
                 referee = row.find('td', {"data-stat": 'referee'}).text
-                print(f"date = {currentDateStr}")
-                print(f"time = {time}")
-                print(f"homeTeam = {homeTeam}")
-                print(f"awayTeam = {awayTeam}")
-                print(f"homeTeamScore = {homeTeamScore}")
-                print(f"awayTeamScore = {awayTeamScore}")
-                print(f"attendance = {attendance}")
-                print(f"referee = {referee}")
-            # currentDateStr = getNextDateStr(currentDateStr)
-            # print(tables[0].prettify())
+                print(f"date={currentDateStr}|")
+                print(f"time={time}|")
+                print(f"homeTeam={homeTeam}|")
+                print(f"awayTeam={awayTeam}|")
+                print(f"homeTeamScore={homeTeamScore}|")
+                print(f"awayTeamScore={awayTeamScore}|")
+                print(f"attendance={attendance}|")
+                print(f"referee={referee}|")
+        currentDateStr = getNextDateStr(currentDateStr)
 
 temp = FbrefScrapper()
 temp.scrap()
