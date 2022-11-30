@@ -1,1 +1,2 @@
 beautifulsoup4
+git+https://github.com/sports-stats-and-odds/database

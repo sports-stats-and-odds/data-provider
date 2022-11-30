@@ -1,13 +1,14 @@
-from scrapper_interface import ScrapperInterface
-from source_web_site_enum import SourceWebSite
+from .scrapper_interface import ScrapperInterface
+from .source_web_site_enum import SourceWebSiteEnum
 from bs4 import BeautifulSoup
 import requests
 from datetime import datetime, timedelta, date
 from time import sleep
+from connector import MySQLConnector
 
 class FbrefScrapper(ScrapperInterface):
-    def __init__(self) -> None:
-        super().__init__(SourceWebSite.FBREF) #create soup in bases class constructor
+    def __init__(self, db_connector: MySQLConnector) -> None:
+        super().__init__(SourceWebSiteEnum.FBREF, db_connector) #create soup in base class constructor
 
     def scrap(self):
 
@@ -20,8 +21,8 @@ class FbrefScrapper(ScrapperInterface):
 
         # while datetime.strptime(currentDateStr, "%Y-%m-%d") < datetime.today(): #while currentDate < todayDate
         print(f'currentDateStr : {currentDateStr}')
-        self.baseUrl += currentDateStr
-        req = requests.get(self.baseUrl)
+        self._baseUrl += currentDateStr
+        req = requests.get(self._baseUrl)
         soup = BeautifulSoup(req.content, 'html.parser')
         tables = soup.find_all('div', {"class": "table_wrapper tabbed"})
         if len(tables) <= 0:
@@ -47,6 +48,3 @@ class FbrefScrapper(ScrapperInterface):
                 print(f"attendance={attendance}|")
                 print(f"referee={referee}|")
         currentDateStr = getNextDateStr(currentDateStr)
-
-temp = FbrefScrapper()
-temp.scrap()

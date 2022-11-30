@@ -1,6 +1,6 @@
 from enum import Enum
 
-SourceWebSite = Enum(
+SourceWebSiteEnum = Enum(
             'SourceWebSite', 
             [
                 'FBREF',
