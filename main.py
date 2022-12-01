@@ -1,4 +1,4 @@
-from dataprovider import FbrefScrapper
+from scrapper import FbrefScrapper
 from connector import MySQLConnector
 
 if __name__ == '__main__': #python -m main to run in this scope
