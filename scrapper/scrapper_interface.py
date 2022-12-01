@@ -2,6 +2,8 @@ from .source_web_site_enum import SourceWebSiteEnum
 from bs4 import BeautifulSoup
 from abc import ABC
 from connector import MySQLConnector
+import logger
+import os
 
 class ScrapperInterface(ABC):  
 
@@ -14,6 +16,8 @@ class ScrapperInterface(ABC):
     def __init__(self, website: str, db_connector: MySQLConnector) -> None:
         self._baseUrl: str = self._get_base_url_from_website(website)
         self._db_connector = db_connector
+        self._logger = logger.get_logger(os.path.dirname(os.path.abspath(__file__)) + "/logs/")
+
 
     def scrap(self):
         pass
