@@ -16,7 +16,7 @@ class FbrefScrapper(ScrapperInterface):
             date = date + timedelta(days=1)
             return date.strftime("%Y-%m-%d")
     
-        currentDateStr: str = "2020-02-01" #"1888-01-01"
+        currentDateStr: str = "1888-01-01"
 
         while datetime.strptime(currentDateStr, "%Y-%m-%d") < datetime.today(): #while currentDate < todayDate
             self._logger.info("------------------------------------")
