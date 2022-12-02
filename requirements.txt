@@ -1,3 +1,6 @@
 beautifulsoup4
 git+https://github.com/sports-stats-and-odds/database
 git+https://github.com/sports-stats-and-odds/logger
+mysql-connector-python
+colorlog
+requests
