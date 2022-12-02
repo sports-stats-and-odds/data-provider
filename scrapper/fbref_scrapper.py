@@ -29,8 +29,9 @@ class FbrefScrapper(ScrapperInterface):
                 rows = table.find_all('tr')
                 rows.pop(0) #remove first row because it is the table header
                 for row in rows:
-                    try:
-                        hour = row.find('span', {"class": 'venuetime'}).text
+                    try:                        
+                        hour_span = row.find('span', {"class": 'venuetime'})
+                        hour = hour_span.text if hour_span != None else None
                         homeTeam = row.find('td', {"data-stat": 'home_team'}).find('a').text
                         awayTeam = row.find('td', {"data-stat": 'away_team'}).find('a').text
                         splittedScore = row.find('td', {"data-stat": 'score'}).find('a').text.split("–") #this is noty a basic dash : the charatcter is U+2013 "–" whereas a basic dash is "-"
