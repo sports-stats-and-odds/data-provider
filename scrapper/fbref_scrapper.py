@@ -11,15 +11,15 @@ class FbrefScrapper(ScrapperInterface):
 
     def scrap(self):
 
-        def getNextDateStr(currentDate: str) -> str:
+        def _getNextDateStr(currentDate: str) -> str:
             date = datetime.strptime(currentDate, "%Y-%m-%d")
             date = date + timedelta(days=1)
             return date.strftime("%Y-%m-%d")
-    
-        currentDateStr: str = "1888-01-01"
+
+        currentDateStr: str = "1888-09-08"
 
         while datetime.strptime(currentDateStr, "%Y-%m-%d") < datetime.today(): #while currentDate < todayDate
-            self._logger.info("------------------------------------")
+            self._logger.info("------------------------------------------------------------------------")
             self._logger.info(f"Adding data for {currentDateStr}")
             soup = self._get_url_soup(self._baseUrl + currentDateStr)
             if soup == None: continue
@@ -29,20 +29,18 @@ class FbrefScrapper(ScrapperInterface):
                 rows = table.find_all('tr')
                 rows.pop(0) #remove first row because it is the table header
                 for row in rows:
-                    try:                        
-                        hour_span = row.find('span', {"class": 'venuetime'})
-                        hour = hour_span.text if hour_span != None else None
-                        homeTeam = row.find('td', {"data-stat": 'home_team'}).find('a').text
-                        awayTeam = row.find('td', {"data-stat": 'away_team'}).find('a').text
-                        splittedScore = row.find('td', {"data-stat": 'score'}).find('a').text.split("–") #this is noty a basic dash : the charatcter is U+2013 "–" whereas a basic dash is "-"
+                    try:
+                        hour = self._get_element(row, 'span', {"class": 'venuetime'}, 'text')
+                        homeTeam = self._get_element(row, 'td', {"data-stat": 'home_team'}).find('a').text
+                        awayTeam = self._get_element(row, 'td', {"data-stat": "away_team"}).find('a').text
+                        splittedScore = self._get_element(row, 'td', {"data-stat": 'score'}).find('a').text.split("–") #this is noty a basic dash : the charatcter is U+2013 "–" whereas a basic dash is "-"
                         homeTeamScore = splittedScore[0]
                         awayTeamScore = splittedScore[1]
-                        round = row.find('th', {"data-stat": 'round'}).find('a').text
-                        gameweek_td = row.find('td', {"data-stat": 'gameweek'})
-                        gameweek = gameweek_td.text if gameweek_td != None else None
-                        grandstand = row.find('td', {"data-stat": 'venue'}).text
-                        attendance = row.find('td', {"data-stat": 'attendance'}).text
-                        referee = row.find('td', {"data-stat": 'referee'}).text
+                        round = self._get_element(row, 'th', {"data-stat": 'round'}).find('a').text
+                        gameweek = self._get_element(row, 'td', {"data-stat": 'gameweek'}, 'text')
+                        grandstand = self._get_element(row, 'td', {"data-stat": 'venue'}, 'text')
+                        attendance = self._get_element(row, 'td', {"data-stat": 'attendance'}, 'text')
+                        referee = self._get_element(row, 'td', {"data-stat": 'referee'}, 'text')
                         self._db_connector.insert(
                             Table.FOOTBALL_MATCH,
                             {
@@ -63,6 +61,6 @@ class FbrefScrapper(ScrapperInterface):
                         )
                     except Exception as error:
                         self._logger.error(repr(error))
-            currentDateStr = getNextDateStr(currentDateStr)
+            currentDateStr = _getNextDateStr(currentDateStr)
             sleep(2)
 

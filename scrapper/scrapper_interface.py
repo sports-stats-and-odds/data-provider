@@ -22,6 +22,11 @@ class ScrapperInterface(ABC):
 
     def scrap(self):
         pass
+    
+    def _get_element(self, soup: BeautifulSoup, type: str, attributes: dict, property_to_extract: Optional[str] = None):
+        element = soup.find(type, attributes)
+        if property_to_extract is not None: return getattr(element, property_to_extract) if element is not None else None
+        else: return element if element is not None else None
 
     def _get_url_soup(self, url: str) -> Optional[BeautifulSoup]:
         try:
