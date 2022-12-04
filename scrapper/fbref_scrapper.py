@@ -16,7 +16,7 @@ class FbrefScrapper(ScrapperInterface):
             date = date + timedelta(days=1)
             return date.strftime("%Y-%m-%d")
 
-        currentDateStr: str = "1888-01-01"
+        currentDateStr: str = "2018-12-02"
 
         while datetime.strptime(currentDateStr, "%Y-%m-%d") < datetime.today(): #while currentDate < todayDate
             self._logger.info("------------------------------------------------------------------------")
@@ -25,8 +25,9 @@ class FbrefScrapper(ScrapperInterface):
             if soup == None: continue
             tables = soup.find_all('div', {"class": "table_wrapper tabbed"})
             for table in tables:
-                contest = table.find('span', {"class": 'section_anchor'}).text[:-2] #remove last 2 characters, which are '">'
+                contest = table.find('span', {"class": 'section_anchor'}).text[:-2] #remove last 2 characters, which are '">'                
                 rows = table.find_all('tr')
+                if len(rows) <= 1: continue; #skeep if table is empty
                 rows.pop(0) #remove first row because it is the table header
                 for row in rows:
                     try:
